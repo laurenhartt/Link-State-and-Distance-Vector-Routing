@@ -7,13 +7,15 @@ import sys
 
 index_dict = {} # used for referencing the adjacency array with strings
 source = '' # starting node
-adj_matrix = [] # for storing nodes and their cost   
-
+adj_matrix = [] # for storing nodes and their cost 
+vertices = [] # a list of every vertex  
+visited = [] # for tracking visited nodes
 
 ############ File Reading ################
 
 # Get the csv file to read from the command line argument
-file_to_read = sys.argv[1]
+#file_to_read = sys.argv[1]
+file_to_read = "topology-1.csv"
 
 # Open the csv file for reading
 with open(file_to_read, newline = '') as csv_file:
@@ -27,6 +29,8 @@ with open(file_to_read, newline = '') as csv_file:
 # Take the first row from the csv file 
 # to get the indexes and remove the blank space 
 temp = adj_matrix[0]
+#temp.pop(0)
+vertices = temp
 
 
 # Build the dictionary.
@@ -49,14 +53,55 @@ def getIndex(s: str):
 # Utility function to find the vertex with
 # minimum distance value, from the set of verticies
 # not yet inlcuded in the Minimum Spanning Tree
-def minDistance(dist, MST):
-    pass
+def minDistance(dist, visited):
+
+    # Initilialize minium distance for next node
+    min = sys.maxsize
+    min_index = 1
+
+    # Search not nearest node not in SPT
+    for v in range(1,len(visited)):
+        if dist[v] < min and visited[v] == False:
+            min = dist[v]
+            min_index = v
+    
+    return min_index
+
+def printSolution(dist):
+        print("Vertex tDistance from Source")
+        for node in range(len(vertices)):
+            print(node, "t", dist[node])
 
 # Method to implement dijikstra's algorithim
-def dijkstra(node: str):
-    # initlialize the MST
-    min_tree = []
-    min_tree.append(source)
+def dijkstra(node):
+
+    # initialize all nodes as unvisited
+    visited = [False] * len(vertices)
+    # set all distances to infinity
+    dist = [sys.maxsize] * len(vertices)
+    # set distance from start node to itself is 0
+    dist[getIndex(node)] = 0
+
+    for cout in range(1,len(visited)):
+
+        u = minDistance(dist, visited)
+
+        visited[u] = True
+
+        for v in range(1,len(visited)):
+            #print(type(adj_matrix[u][v]))
+            if (int(adj_matrix[u][v]) > 0) and (visited[v] == False) and (dist[v] > dist[u] + int(adj_matrix[u][v])):
+                dist[v] = dist[u] + int(adj_matrix[u][v])
+                
+
+    printSolution(dist)    
+    print(visited)
+
+
+
+        
+
+
 
 
 
@@ -74,5 +119,4 @@ def main():
     #print("Shortest path tree for node {}".format(source))
     #dijkstra(source)
 
-print(adj_matrix) # should be a 2D array
-print(adj_matrix[getIndex('w')][getIndex('x')]) # w and x should cost 4
+dijkstra('u')
