@@ -1,7 +1,7 @@
 
 import csv
 import sys
-
+import copy
 
 ############ Variables ###################
 
@@ -67,43 +67,57 @@ def minDistance(dist, visited):
     
     return min_index
 
-def printSolution(dist):
-        print("Vertex tDistance from Source")
-        for node in range(len(vertices)):
-            print(node, "t", dist[node])
+# Helper function for printing
+def printSolution(dist, spt):
+
+    # Make a list of keys to reference the dictionary 
+    # using the values 
+    key_list = list(index_dict.keys()) 
+
+    
+    for node in range(1,len(vertices)):
+        print(key_list[node], ":", dist[node], end = " ")
+    
+    print("\n\nShortest path tree for node {}".format(source))
+    for x in range(1, len(spt)):
+        for y in range(len(spt[x])):
+            print(key_list[spt[x][y]], end = " ")
+        print(" ")
+    
+        
 
 # Method to implement dijikstra's algorithim
+# Algortihim referenced from GeeksForGeeks
+# Link: https://www.geeksforgeeks.org/python-program-for-dijkstras-shortest-path-algorithm-greedy-algo-7/
 def dijkstra(node):
 
     # initialize all nodes as unvisited
     visited = [False] * len(vertices)
     # set all distances to infinity
     dist = [sys.maxsize] * len(vertices)
+    # initialize shortest path tree
+    spt = [[None]] * len(vertices)
     # set distance from start node to itself is 0
     dist[getIndex(node)] = 0
-
-    for cout in range(1,len(visited)):
-
+    temp = []
+    for i in range(1,len(visited)):
+        
+        # Pick the minimum distance vertex from
+        # the set of verticies not yet processed
+        # u is always equal to srch in first iteration
         u = minDistance(dist, visited)
-
+        
+        # Put the minimum distance vertex in the
+        # shortest path tree
         visited[u] = True
+        temp.append(u)
 
         for v in range(1,len(visited)):
-            #print(type(adj_matrix[u][v]))
             if (int(adj_matrix[u][v]) > 0) and (visited[v] == False) and (dist[v] > dist[u] + int(adj_matrix[u][v])):
                 dist[v] = dist[u] + int(adj_matrix[u][v])
+        spt[i] = temp.copy()
                 
-
-    printSolution(dist)    
-    print(visited)
-
-
-
-        
-
-
-
-
+    printSolution(dist,spt) 
 
 
 def bellmanFord():
@@ -111,12 +125,10 @@ def bellmanFord():
 
 ############## Main ########################
 def main():
-    pass
     # Get the starting point from the user input
-    #source = input("Please, provide the source node: ")
+    source = input("Please, provide the source node: ")
+    print("\nCosts of least-cost paths for source node: {}".format(source))
 
-    # Compute the min spanning tree
-    #print("Shortest path tree for node {}".format(source))
-    #dijkstra(source)
+    dijkstra(source)
 
-dijkstra('u')
+main()
