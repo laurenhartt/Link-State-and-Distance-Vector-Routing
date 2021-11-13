@@ -1,4 +1,3 @@
-
 import csv
 import sys
 import copy
@@ -120,15 +119,52 @@ def dijkstra(node):
     printSolution(dist,spt) 
 
 
-def bellmanFord():
-    pass
+def bellmanFord(source, vertices, adj_matrix):
+    N = len(adj_matrix)
+    dist = [sys.maxsize] * N
+    
+    ix = 0
+    count=0
+    for row in adj_matrix:
+        
+        if row[0] == source:
+            ix = count
+        else:
+            count+=1
+    dist[ix] = 0
+    for k in range(N-1):
+        for i in range(1,N):
+            for j in range(1,N):
+                
+                if dist[i] != sys.maxsize and adj_matrix[i][j] and dist[j]> (dist[i] + int(adj_matrix[i][j])):
+                    dist[j] = dist[i]+int(adj_matrix[i][j])
+                    
+    for k in range(N-1):
+        for i in range(1,N):
+            for j in range (1,N):
+                if(adj_matrix[i][j] and dist[j] > (dist[i] + int(adj_matrix[i][j]))): 
+                    print("\n negative distance path")
+    print("\n")
+    for i in range(1,N):
+        if(i!=ix):
+            destination = adj_matrix[i][0]
+            distance = dist[i]
+            print("{} -> {}  = {}".format(source, destination, distance))
+        
+    
+
+
 
 ############## Main ########################
 def main():
     # Get the starting point from the user input
     source = input("Please, provide the source node: ")
     print("\nCosts of least-cost paths for source node: {}".format(source))
+    print("\nDistance vector for {}".format(source))
 
     dijkstra(source)
+    
+    for row in adj_matrix[1:]:
+        bellmanFord(row[0],vertices,adj_matrix)
 
 main()
