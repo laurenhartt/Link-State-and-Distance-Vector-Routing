@@ -144,13 +144,10 @@ def bellmanFord(source, vertices, adj_matrix):
             for j in range (1,N):
                 if(adj_matrix[i][j] and dist[j] > (dist[i] + int(adj_matrix[i][j]))): 
                     print("\n negative distance path")
-    print("\n")
+    
     for i in range(1,N):
-        if(i!=ix):
-            destination = adj_matrix[i][0]
-            distance = dist[i]
-            print("{} -> {}  = {}".format(source, destination, distance))
-        
+            print(" {}".format(dist[i]), end='')
+            
     
 
 
@@ -165,6 +162,9 @@ def main():
     dijkstra(source)
     
     for row in adj_matrix[1:]:
+        print("\nDistance vector for node {}:".format(row[0]), end='')
         bellmanFord(row[0],vertices,adj_matrix)
+
+
 
 main()
