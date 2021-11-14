@@ -118,40 +118,38 @@ def dijkstra(node):
                 
     printSolution(dist,spt) 
 
-
+# Method to implement Bellman Ford algorithm
 def bellmanFord(source, vertices, adj_matrix):
     N = len(adj_matrix)
     dist = [sys.maxsize] * N
-    
+    # Set variables to use the index of the adjacency matrix
+    # Rather than the value to avoid math errors
     ix = 0
     count=0
-    for row in adj_matrix:
-        
+    for row in adj_matrix:     
         if row[0] == source:
             ix = count
         else:
             count+=1
     dist[ix] = 0
+    # Check the distance vectors
+    # If positive, list out
+    # If negtive print a statement
     for k in range(N-1):
         for i in range(1,N):
-            for j in range(1,N):
-                
+            for j in range(1,N): 
                 if dist[i] != sys.maxsize and adj_matrix[i][j] and dist[j]> (dist[i] + int(adj_matrix[i][j])):
-                    dist[j] = dist[i]+int(adj_matrix[i][j])
-                    
+                    dist[j] = dist[i]+int(adj_matrix[i][j])              
     for k in range(N-1):
         for i in range(1,N):
             for j in range (1,N):
                 if(adj_matrix[i][j] and dist[j] > (dist[i] + int(adj_matrix[i][j]))): 
                     print("\n negative distance path")
-    
+   # For the length of the adjacency matrix
+   # Print the distances for each node
     for i in range(1,N):
             print(" {}".format(dist[i]), end='')
             
-    
-
-
-
 ############## Main ########################
 def main():
     # Get the starting point from the user input
@@ -161,10 +159,9 @@ def main():
 
     dijkstra(source)
     
+    # Run Bellman Ford algorithm 
+    # Skipping over the first row to only use the number values
     for row in adj_matrix[1:]:
         print("\nDistance vector for node {}:".format(row[0]), end='')
         bellmanFord(row[0],vertices,adj_matrix)
-
-
-
 main()
